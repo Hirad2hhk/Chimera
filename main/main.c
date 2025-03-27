@@ -23,7 +23,7 @@
 int ieee80211_raw_frame_sanity_check(int32_t arg, int32_t arg2, int32_t arg3) { return 0; }
 
 void app_main(void) {
-    serial_manager_init();
+    initialize_console();
     wifi_manager_init();
 #ifndef CONFIG_IDF_TARGET_ESP32S2
     // ble_init();
@@ -34,13 +34,9 @@ void app_main(void) {
     return;
 #endif
 
-#ifdef CONFIG_WITH_ETHERNET
-
-#endif
-
     command_init();
-
     register_commands();
+    xTaskCreate(console_task, "console_task", 4096, NULL, 5, NULL);
 
     settings_init(&G_Settings);
 

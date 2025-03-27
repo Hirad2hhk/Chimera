@@ -12,6 +12,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "esp_console.h"
+#include "esp_vfs_dev.h"
+#include "linenoise/linenoise.h"
+#include "driver/uart.h"
+#include <stdio.h>
+#include <string.h>
+#include "esp_log.h"
 
 #if defined(CONFIG_IDF_TARGET_ESP32S3) ||                                      \
     defined(CONFIG_IDF_TARGET_ESP32C3) || defined(CONFIG_IDF_TARGET_ESP32C6)
@@ -29,149 +36,59 @@ char serial_buffer[SERIAL_BUFFER_SIZE];
 // Forward declaration of command handler
 int handle_serial_command(const char *command);
 
-void serial_task(void *pvParameter) {
-  uint8_t *data = (uint8_t *)malloc(BUF_SIZE);
-  int index = 0;
+void console_task(void *pvParameter)
+{
+  char *line;
+  while (1)
+  {
+    line = linenoise("esp> ");
 
-  while (1) {
-    int length = 0;
-
-    // Read data from the main UART
-    length = uart_read_bytes(UART_NUM, data, BUF_SIZE, 10 / portTICK_PERIOD_MS);
-
-#if JTAG_SUPPORTED
-    if (length <= 0) {
-      length =
-          usb_serial_jtag_read_bytes(data, BUF_SIZE, 10 / portTICK_PERIOD_MS);
+    if (line == NULL)
+    {
+      printf("Error: linenoise returned NULL.\n");
+      continue; // Prevents crash
     }
-#endif
 
-    // Process data from the main UART
-    if (length > 0) {
-      for (int i = 0; i < length; i++) {
-        char incoming_char = (char)data[i];
+      linenoiseHistoryAdd(line);
 
-        if (incoming_char == '\n' || incoming_char == '\r') {
-          serial_buffer[index] = '\0';
-          if (index > 0) {
-            handle_serial_command(serial_buffer);
-            index = 0;
-          }
-        } else if (index < SERIAL_BUFFER_SIZE - 1) {
-          serial_buffer[index++] = incoming_char;
-        } else {
-          index = 0;
-        }
+
+      printf("console_task ,Received command: %s", line);
+      char output_buf[256] = {0}; // Create a small buffer for output
+      esp_err_t ret = esp_console_run(line, output_buf);
+      ESP_LOGI("console_task", "Received command: %s", line);
+      if (ret != ESP_OK)
+      {
+        printf("Error executing command: %s\n", esp_err_to_name(ret));
       }
-    }
 
-    // Check command queue for simulated commands
-    SerialCommand command;
-    if (xQueueReceive(commandQueue, &command, 0) == pdTRUE) {
-      handle_serial_command(command.command);
-    }
-
-    vTaskDelay(10 / portTICK_PERIOD_MS);
+    linenoiseFree(line); // Safe to free since we checked for NULL
   }
-
-  free(data);
 }
 
 // Initialize the SerialManager
-void serial_manager_init() {
-  // UART configuration for main UART
-  const uart_config_t uart_config = {
+void initialize_console()
+{
+  // Configure UART for console input/output
+  uart_config_t uart_config = {
       .baud_rate = 115200,
       .data_bits = UART_DATA_8_BITS,
       .parity = UART_PARITY_DISABLE,
       .stop_bits = UART_STOP_BITS_1,
-      .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
-  };
+      .flow_ctrl = UART_HW_FLOWCTRL_DISABLE};
+  uart_driver_install(UART_NUM_0, 256, 0, 0, NULL, 0);
+  uart_param_config(UART_NUM_0, &uart_config);
+  uart_set_pin(UART_NUM_0, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
 
-  uart_param_config(UART_NUM, &uart_config);
-  uart_driver_install(UART_NUM, BUF_SIZE * 2, 0, 0, NULL, 0);
+  // Set up VFS to use UART0 for console
+  esp_vfs_dev_uart_use_driver(UART_NUM_0);
 
-#if JTAG_SUPPORTED
-  usb_serial_jtag_driver_config_t usb_serial_jtag_config = {
-      .rx_buffer_size = BUF_SIZE,
-      .tx_buffer_size = BUF_SIZE,
-  };
-  usb_serial_jtag_driver_install(&usb_serial_jtag_config);
-#endif
+  // Initialize console
+  esp_console_config_t console_config = ESP_CONSOLE_CONFIG_DEFAULT();
+  esp_console_init(&console_config);
 
-  commandQueue = xQueueCreate(10, sizeof(SerialCommand));
-
-  xTaskCreate(serial_task, "SerialTask", 8192, NULL, 10, NULL);
-  printf("Serial Started...\n");
-}
-
-int handle_serial_command(const char *input) {
-  char *input_copy = strdup(input);
-  if (input_copy == NULL) {
-    printf("Memory allocation error\n");
-    return ESP_ERR_INVALID_ARG;
-  }
-  char *argv[10];
-  int argc = 0;
-  char *p = input_copy;
-
-  while (*p != '\0' && argc < 10) {
-    while (isspace((unsigned char)*p)) {
-      p++;
-    }
-
-    if (*p == '\0') {
-      break;
-    }
-
-    if (*p == '"' || *p == '\'') {
-      // Handle quoted arguments
-      char quote = *p++;
-      argv[argc++] = p; // Start of the argument
-
-      while (*p != '\0' && *p != quote) {
-        p++;
-      }
-
-      if (*p == quote) {
-        *p = '\0'; // Null-terminate the argument
-        p++;
-      } else {
-        // Handle missing closing quote
-        printf("Error: Missing closing quote\n");
-        free(input_copy);
-        return ESP_ERR_INVALID_ARG;
-      }
-    } else {
-      // Handle unquoted arguments
-      argv[argc++] = p; // Start of the argument
-
-      while (*p != '\0' && !isspace((unsigned char)*p)) {
-        p++;
-      }
-
-      if (*p != '\0') {
-        *p = '\0'; // Null-terminate the argument
-        p++;
-      }
-    }
-  }
-
-  if (argc == 0) {
-    free(input_copy);
-    return ESP_ERR_INVALID_ARG;
-  }
-
-  CommandFunction cmd_func = find_command(argv[0]);
-  if (cmd_func != NULL) {
-    cmd_func(argc, argv);
-    free(input_copy);
-    return ESP_OK;
-  } else {
-    printf("Unknown command: %s\n", argv[0]);
-    free(input_copy);
-    return ESP_ERR_INVALID_ARG;
-  }
+  // Enable command history and auto-completion
+  linenoiseSetMultiLine(1);
+  linenoiseHistorySetMaxLen(10);
 }
 
 void simulateCommand(const char *commandString) {

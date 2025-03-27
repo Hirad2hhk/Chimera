@@ -4,21 +4,19 @@
 #define COMMAND_H
 
 #include "driver/gpio.h"
-#include "freertos/FreeRTOS.h"
+#include"freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
 typedef void (*CommandFunction)(int argc, char **argv);
 
-typedef struct Command {
+typedef struct CommandNode{
   char *name;
   CommandFunction function;
-  struct Command *next;
-} Command;
+  struct CommandNode *next;
+} CommandNode;
 
 // Functions to manage commands
 void command_init();
-void register_command(const char *name, CommandFunction function);
-void unregister_command(const char *name);
 CommandFunction find_command(const char *name);
 
 extern TaskHandle_t VisualizerHandle;

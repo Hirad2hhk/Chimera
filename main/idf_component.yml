@@ -1,4 +1,6 @@
 dependencies:
+  idf:
+    version: '>=4.1.0'
   espressif/esp_lcd_axs15231b: ==1.0.0
   lvgl/lvgl: ^9.2.2
   espressif/mdns: ^1.8.2

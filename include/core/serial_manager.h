@@ -10,8 +10,7 @@
 void initialize_console();
 
 // Task function for reading serial commands
-void console_task();
-
+void console_task(void *pvParameter);
 
 void simulateCommand(const char *commandString);
 

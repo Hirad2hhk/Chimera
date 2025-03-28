@@ -81,6 +81,6 @@ direct_dependencies:
 - idf
 - jgromes/radiolib
 - lvgl/lvgl
-manifest_hash: eb316af5de8b92a6923493c5c3c965fa777cbe1b3775fba60907c588ea8c8104
+manifest_hash: 06f4b3cb7b07ec5d6e463e28ba5f7471d7784456f07114bcd868fa200acd563a
 target: esp32
 version: 2.0.0

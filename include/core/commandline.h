@@ -17,7 +17,6 @@ typedef struct CommandNode{
 
 // Functions to manage commands
 void command_init();
-CommandFunction find_command(const char *name);
 
 extern TaskHandle_t VisualizerHandle;
 

@@ -27,19 +27,7 @@ TaskHandle_t VisualizerHandle = NULL;
 
 void command_init() { command_list_head = NULL; }
 
-CommandFunction find_command(const char *name)
-{
-    CommandNode *current = command_list_head;
-    while (current != NULL)
-    {
-        if (strcmp(current->name, name) == 0)
-        {
-            return current->function;
-        }
-        current = current->next;
-    }
-    return NULL;
-}
+
 
 int cmd_wifi_scan_start(int argc, char **argv)
 {

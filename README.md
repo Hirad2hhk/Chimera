@@ -1,4 +1,4 @@
-#Chimera 
+# Chimera 
 
 Chimera is an educational tool designed for learning and experimentation with embedded systems, particularly using the ESP32 platform. This project aims to provide an extensible and modular framework for developing low-level applications, peripheral interactions, and network-based tools.
 

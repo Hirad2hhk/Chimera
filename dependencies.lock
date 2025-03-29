@@ -3,18 +3,26 @@ dependencies:
     component_hash: 351350613ceafba240b761b4ea991e0f231ac7a9f59a9ee901f751bddc0bb18f
     dependencies:
     - name: idf
-      registry_url: https://components.espressif.com
       require: private
       version: '>=4.1'
     source:
       registry_url: https://components.espressif.com
       type: service
     version: 0.5.3
+  espressif/console_simple_init:
+    component_hash: b488b12318f3cb6e0b55b034bd12956926d45f0e1396442e820f8ece4776c306
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=5.0'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 1.1.0
   espressif/esp_lcd_axs15231b:
     component_hash: ae92c4bec4f69442757b42638aebc05c1acc42fe8b54a6fd4b1ecebdd67657e6
     dependencies:
     - name: idf
-      registry_url: https://components.espressif.com
       require: private
       version: '>5.0.4,!=5.1.1'
     - name: espressif/esp_lcd_touch
@@ -33,7 +41,6 @@ dependencies:
     component_hash: 779b4ba2464a3ae85681e4b860caa5fdc35801458c23f3039ee761bae7f442a4
     dependencies:
     - name: idf
-      registry_url: https://components.espressif.com
       require: private
       version: '>=4.4.2'
     source:
@@ -43,10 +50,37 @@ dependencies:
   idf:
     source:
       type: idf
-    version: 5.3.1
+    version: 5.2.5
+  jgromes/radiolib:
+    component_hash: 833daf5c5dc74c7b5c26e93310af114f978e7002803b2a8a0cd8d78820e06b39
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=4.1'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 7.1.2
+  lvgl/lvgl:
+    component_hash: 096c69af22eaf8a2b721e3913da91918c5e6bf1a762a113ec01f401aa61337a0
+    dependencies: []
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 9.2.2
+  mdns:
+    dependencies: []
+    source:
+      path: /Users/hirad2hhk/Developer/esp/Chimera/components/mdns
+      type: local
+    version: 1.4.0
 direct_dependencies:
+- espressif/console_simple_init
 - espressif/esp_lcd_axs15231b
+- espressif/mdns
 - idf
-manifest_hash: ff817fc280f015bca9d71c816c393634a501cf5849e39e409281527a1e3b60d4
+- jgromes/radiolib
+- lvgl/lvgl
+manifest_hash: 06f4b3cb7b07ec5d6e463e28ba5f7471d7784456f07114bcd868fa200acd563a
 target: esp32
 version: 2.0.0

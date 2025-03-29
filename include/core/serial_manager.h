@@ -7,12 +7,10 @@
 #include <managers/display_manager.h>
 
 // Initialize the SerialManager
-void serial_manager_init();
+void initialize_console();
 
 // Task function for reading serial commands
-void serial_task(void *pvParameter);
-
-int handle_serial_command(const char *input);
+void console_task(void *pvParameter);
 
 void simulateCommand(const char *commandString);
 

@@ -23,4 +23,6 @@ add_compile_definitions(MAX_WPS_NETWORKS=15)
 
 # Include project settings
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w") # For C++
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w")     # For C
 project(Ghost_ESP_IDF)

@@ -1,94 +1,39 @@
-# Ghost ESP: Next Generation Wi-Fi Pentesting
+#Chimera 
 
-**⭐️ Enjoying Ghost ESP? Please give our repo a star!**
+Chimera is an educational tool designed for learning and experimentation with embedded systems, particularly using the ESP32 platform. This project aims to provide an extensible and modular framework for developing low-level applications, peripheral interactions, and network-based tools.
 
-Ghost ESP turns your ESP32 into a powerful, cheap and helpful wireless testing tool. Built on ESP-IDF.
+Im neither a low level embeded programmer nor a security reasercher this project is by no means complete or adherent to all best practices in either topic. I would be happy to recieve your contributions.
 
-> **Note:** This is an **Alpha release**. Some features are still under development and may be unstable.
-
----
+## Features
+- Modular architecture with support for various peripherals
+- ESP-IDF based development
+- Integrated logging and debugging utilities
+- Extensible component-based design
 
 ## Getting Started
 
-1. Follow our [Flashing Guide](https://github.com/Spooks4576/Ghost_ESP/wiki) for installation and configuration.
-2. Join our community on [Discord](https://discord.gg/PkdjxqYKe4) for support and feedback.
-3. Visit our [Official Website](https://ghostesp.net) to stay in touch!
+### Prerequisites
+- ESP-IDF installed ([Installation Guide](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html))
+- CMake & Ninja build system
+- Python 3 and required dependencies
 
----
-## Key Features
+### Build & Flash
+```sh
+idf.py set-target esp32
+idf.py build
+idf.py flash monitor
+```
 
-<details>
-<summary>WiFi Features</summary>
+### Configuration
+Use the ESP-IDF menuconfig tool to modify settings:
+```sh
+idf.py menuconfig
+```
 
-- **AP Scanning** – Detect nearby WiFi networks.
-- **Station Scanning** – Monitor connected WiFi clients.
-- **Beacon Spam** – Broadcast customizable SSID beacons.
-- **Deauthentication Attacks** – Disconnect clients from specific networks.
-- **WiFi Capture** – Log probe requests, beacon frames, deauth packets, and raw data *(requires SD card or compatible storage)*.
-- **Evil Portal** – Set up a fake WiFi portal with a custom SSID and domain.
-- **Pineapple Detection** – Detect Wi-Fi Pineapples and Evil Twin Attacks.
-- **Web-UI** – Built-in interface for changing settings and sending commands easily.
-- **Port Scanning** – Scan your local network for open ports.
+## License
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
-</details>
+## Disclaimer
+This project is an **educational tool** intended for learning and experimentation. **Neither the author nor any contributor is liable for any misuse** of this software. Users are responsible for ensuring compliance with all applicable laws and regulations.
 
-<details>
-<summary>BLE Features</summary>
 
-- **BLE Scanning** – Detect BLE devices, including specialized modes for AirTags, Flipper Zeros, and more.
-- **BLE Packet Capture** – Capture and analyze BLE traffic.
-- **BLE Wardriving** – Map and track BLE devices in your vicinity.
-
-</details>
-
-<details>
-<summary>Additional Features</summary>
-
-- **GPS Integration** – Retrieve location info via the `gpsinfo` command *(on supported hardware)*.
-- **RGB LED Modes** – Customizable LED feedback (Stealth, Normal, Rainbow).
-- **DIAL & Chromecast V2 Support** – Interact with DIAL-capable devices (e.g., Roku, Chromecast).
-- **Flappy Ghost and Rave Modes** – Extra apps for boards with displays.
-
-</details>
-
-> **Note:** BLE Spam is **NOT** supported at this time.
-
----
-
-## Supported ESP32 Models
-
-- **ESP32 Wroom**
-- **ESP32 S2**
-- **ESP32 C3**
-- **ESP32 S3**
-- **ESP32 C6**
-
-> **Note:** Feature availability may vary by model.
-> We do NOT support BLE Spam
----
-
-## Ghost ESP vs. ESP32 Marauder
-![399090585-84fde8b3-e17e-44d5-9321-04f1f1ae8541](https://github.com/user-attachments/assets/1455802e-390a-4320-a224-aba2bdd412d0)
-
----
-
-## Acknowledgments
-
-Special thanks to:
-
-- **[JustCallMeKoKo](https://github.com/justcallmekoko/ESP32Marauder):** For foundational ESP32 development.
-- **[thibauts](https://github.com/thibauts/node-castv2-client):** For CastV2 protocol insights.
-- **[MarcoLucidi01](https://github.com/MarcoLucidi01/ytcast/tree/master/dial):** For DIAL protocol integration.
-- **[SpacehuhnTech](https://github.com/SpacehuhnTech/esp8266_deauther):** For reference deauthentication code.
-
----
-
-## Legal Disclaimer
-
-Ghost ESP is intended solely for educational and ethical security research. Unauthorized or malicious use is illegal. Always obtain proper permissions before conducting any network tests.
-
----
-
-## Open Source Contributions
-
-This project is open source and welcomes your contributions. If you've added new features or enhanced device support, please submit your changes!

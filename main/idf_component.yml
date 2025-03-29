@@ -1,3 +1,8 @@
-
 dependencies:
-  espressif/esp_lcd_axs15231b: "==1.0.0"
+  idf:
+    version: '>=4.1.0'
+  espressif/esp_lcd_axs15231b: ==1.0.0
+  lvgl/lvgl: ^9.2.2
+  espressif/mdns: ^1.8.2
+  jgromes/radiolib: ^7.1.2
+  espressif/console_simple_init: ^1.1.0
